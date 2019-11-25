@@ -1,0 +1,9 @@
+
+- name: mangage local user(s)
+  ios_user: 
+    aggregate: "{{ ios_username_users }}"
+    update_password: "{{ ios_username_update_password }}"
+    purge: "{{ ios_username_purge }}"
+  tags: username
+  become: true
+  

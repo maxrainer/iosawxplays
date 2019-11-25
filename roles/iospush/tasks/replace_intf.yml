@@ -1,0 +1,36 @@
+---
+
+- name: "get running-config section interface {{ ios_replace_interface }}"
+  ios_command:
+    commands: "show running-config | section interface {{ ios_replace_interface }}$"
+  register: showrunning
+  tags: always
+
+- name: ios_config_include_string
+  debug:
+    msg: "{{ showrunning }}"
+  tags: debug
+
+- set_fact:
+    new_config_string: "{{ showrunning.stdout[0] | regex_replace('interface.*\n','') }}"
+  tags: always
+
+- set_fact:
+    new_config_string: "{{ new_config_string | regex_replace('\n?' + ios_replace_match + '\n','\n ' + ios_replace_value + '\n') }}"
+  tags: always
+
+- set_fact: 
+    new_config_list: "{{ new_config_string.split('\n') }}"
+  tags: always
+
+- name: ios_config_include_string
+  debug:
+    msg: "{{ new_config_list }}"
+  tags: debug
+
+- name: "push config to interface {{ ios_replace_interface }}"
+  ios_config:
+    lines: "{{ new_config_list }}"
+    parents: "interface {{ ios_replace_interface }}"
+    running_config: ""
+  tags: always

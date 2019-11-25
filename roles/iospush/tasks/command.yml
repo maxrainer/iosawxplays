@@ -1,0 +1,23 @@
+---
+
+
+- name: save config before command execution
+  ios_command:
+    commands: 'write memory'
+  when: ios_pre_save_config
+  tags: command
+
+- name: execute command with prompt
+  ios_command: 
+    commands:
+      - command: "{{ ios_command }}"
+        prompt: "{{ ios_command_prompt }}"
+        answer: "{{ ios_command_answer }}"
+  when: ios_command_prompt != ""
+  tags: command
+
+- name: execute command without prompt
+  ios_command: 
+    commands: "{{ ios_command }}"
+  when: ios_command_prompt == ""
+  tags: command

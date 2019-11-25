@@ -1,0 +1,63 @@
+
+
+- set_fact:
+    ios_config_line_array: "{{ ios_config_lines.split('\n') }}"
+  tags: always
+
+- name: debug ios_config_line_array
+  debug: 
+    msg: "{{ ios_config_line_array }}"
+  tags: debug
+
+- set_fact:
+   ios_template_args: "{{ ios_template_args|combine({'ios_config_lines':ios_config_line_array}) }}"
+  tags: always
+
+- name: debug ios_tempate_args
+  debug: 
+    msg: "{{ ios_template_args }}"
+  tags: debug
+
+- name: debug original IOS config string
+  debug: 
+    msg: "{{ config_string }}"
+  tags: debug
+
+- name: compare running config lines
+  config_compliance:
+    source: "{{ config_string }}\n"
+    search_mode: line
+    compare_method: equals
+    template: "roles/iospush/templates/singleline.j2"
+    template_args: "{{ ios_template_args }}"
+    destination_expected: /tmp/expected
+    destination_not_expected: /tmp/notexpected
+    search_start: ".*"
+  register: compare
+  tags: line
+
+
+
+- name: compare running config blocked 
+  config_compliance:
+    source: "{{ config_string }}\n"
+    compare_method: equals
+    search_mode: block
+    search_start: "{{ ios_block_search_start }}"
+    template_args: "{{ ios_template_args }}"
+    template: "roles/iospush/templates/singleline.j2"
+    destination_expected: /tmp/expected
+    destination_not_expected: /tmp/notexpected
+  register: compare
+  tags: block
+    
+- name: compare result
+  debug:
+    msg: "{{ compare }}"
+  tags: debug
+
+- set_fact: 
+    push_lines: "{{ compare.expected_commands }}" 
+    clear_lines: "{{ compare.not_expected_commands }}"
+  tags: always
+     

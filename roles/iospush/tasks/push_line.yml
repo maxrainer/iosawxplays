@@ -1,0 +1,33 @@
+
+- name: clearing these lines from device
+  debug:
+    msg: "{{ clear_lines }}"
+  tags: 
+    - clearing_up
+    - debug
+
+- name: clear config from device (not expected)
+  ios_config:
+      lines: "{{ clear_lines }}"
+      running_config: ""
+      after: "\r"
+  tags:
+    - clearing_up
+  when: not ios_testing_only | bool
+
+- name: pushing these lines to device
+  debug:
+    msg: "{{ push_lines }}"
+  tags: 
+    - push_config
+    - debug
+
+- name: push missing config to device (expected but missing)
+  ios_config:
+    lines: "{{ push_lines }}"
+    running_config: ""
+  tags:
+   -  push_config
+  when: not ios_testing_only | bool
+
+

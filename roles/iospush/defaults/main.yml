@@ -1,0 +1,37 @@
+---
+# defaults file for iospush
+
+ios_testing_only: false
+
+# module ios_user 
+# takes key update_password: 
+# values: always, on_create
+ios_username_update_password: "on_create"
+ios_username_purge: "no"
+ios_username_users: [
+  {'name': 'userA', 'configured_password': 'changeme', 'privilege': '15'},
+  {'name': 'userB', 'configured_password': 'changeme', 'privilege': '2'}
+]
+
+ios_config_include_string: ""
+
+ios_block_search_start: ""
+
+ios_config_lines: |-
+  first line
+  second line
+
+ios_pre_save_config: false
+ios_command: ""
+ios_command_prompt: ""
+ios_command_answer: "\r"
+
+ios_replace_interface: ""
+ios_replace_match: "" 
+ios_replace_value: ""
+
+ios_skip_config: false
+ios_skip_compare: false
+ios_skip_user: false
+ios_skip_push: false
+ios_skip_command: false

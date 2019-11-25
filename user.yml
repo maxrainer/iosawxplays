@@ -1,0 +1,12 @@
+---
+
+- name: password changes
+  hosts: all
+  roles: 
+    - iospush
+  gather_facts: no
+  vars:
+    - ios_skip_push: true
+    - ios_skip_compare: true
+    - ios_skip_command: true
+    

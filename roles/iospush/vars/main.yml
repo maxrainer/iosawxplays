@@ -1,0 +1,4 @@
+---
+# vars file for iospush
+
+ios_template_args: { }

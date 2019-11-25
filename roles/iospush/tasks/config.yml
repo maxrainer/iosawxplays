@@ -1,0 +1,46 @@
+---
+
+- fail:
+    msg: "IOS Config Lines are empty. This is not a valid input."
+  when: ios_config_lines == ""
+
+- name: ios_config_include_string
+  debug:
+    msg: "{{ ios_config_include_string }}"
+  tags: debug
+
+- name: get running-config with include param
+  ios_command:
+    commands: "show running-config | include {{ ios_config_include_string }}"
+  register: showrunning
+  when: ios_config_include_string != ""
+  tags: always
+
+- name: ios_config_include_string
+  debug:
+    msg: "{{ showrunning }}"
+  when: ios_config_include_string != ""
+  tags: debug
+
+- set_fact:
+    config_string: "{{ showrunning.stdout[0] }}"
+  when: ios_config_include_string != ""
+  tags: always
+
+- name: pull running-config using ansible facts
+  ios_facts: 
+    gather_subset: all
+  when: ios_config_include_string == ""
+  tags: always
+  become: true
+
+- set_fact:
+    config_string: "{{ ansible_facts.net_config }}"
+  when: ios_config_include_string == ""
+  tags: always
+
+- name: IOS original config String
+  debug: 
+    msg: "{{ config_string }}"
+  tags: debug
+

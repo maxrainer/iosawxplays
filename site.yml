@@ -1,0 +1,9 @@
+---
+
+- name: pushconfig
+  hosts: all
+  tags: 
+    - username
+  roles: 
+    - iospush
+  gather_facts: no

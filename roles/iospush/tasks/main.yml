@@ -1,0 +1,40 @@
+---
+# tasks file for iospush
+
+
+- name: include config.yml
+  include_tasks: config.yml
+  tags: 
+    - configure
+    - config
+  when: not ios_skip_config
+
+- name: include compare.yml
+  include_tasks: compare.yml
+  tags: configure
+  when: not ios_skip_compare
+
+- name: include push_line.yml
+  include_tasks: push_line.yml
+  tags: line
+  when: not ios_skip_push
+
+- name: include push_block.yml
+  include_tasks: push_block.yml
+  tags: block
+  when: not ios_skip_push
+
+- name: include push_user.yml
+  include_tasks: push_user.yml
+  tags: username
+  when: not ios_skip_user
+
+- name: include command.yml
+  include_tasks: command.yml
+  tags: command
+  when: not ios_skip_command
+
+- name: include replace_intf.yml
+  include_tasks: replace_intf.yml
+  tags: replace_intf
+  when: not ios_skip_command
